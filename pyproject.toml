@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "scheduler"
+version = "0.0.1"
+description = ""
+authors = ["Murad Akhundov <akhundov1murad@gmail.com>", "Rustam Guliyev <rustam24052003@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+diator = {extras = ["azure"], version = "^0.1.0"}
+blacksheep = "^1.2.12"
+sqlalchemy = "^2.0.9"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
