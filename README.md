@@ -26,6 +26,8 @@ This section provides an overview of the main business rules and processes that 
 
 - Approve delay: This command could be triggered when a designated authority approves a delay, which would then update the train schedule and notify the relevant parties.
 
+- Report delay: This command could be triggered when a designated authority approves a delay.
+
 - Update train status: This command could be triggered when a train's status changes, which would then update the train schedule and notify the relevant parties.
 
 - Dispatch train: This command could be triggered when a train is ready to depart from a station, which would then update the train's status and notify the relevant parties.
