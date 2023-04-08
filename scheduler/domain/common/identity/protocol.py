@@ -1,18 +1,18 @@
 from typing import Callable, Protocol, TypeVar
 
-I = TypeVar("I")
+IdentityType = TypeVar("IdentityType", covariant=True)
 
 
-class IdentityProtocol(Protocol[I]):
+class IdentityProtocol(Protocol[IdentityType]):
     @property
-    def value_generator(self) -> Callable[[], I]:
+    def value_generator(self) -> Callable[[], IdentityType]:
         ...
 
     @classmethod
     def from_string(cls, plain_str: str) -> "IdentityProtocol":
         ...
 
-    def __eq__(self, another_id: I) -> bool:
+    def __eq__(self, identity: "IdentityProtocol") -> bool:
         ...
 
     def __str__(self) -> str:

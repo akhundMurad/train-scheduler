@@ -6,7 +6,7 @@ from scheduler.domain.common.identity.protocol import IdentityProtocol
 
 class UUIDIdentity(IdentityProtocol[UUID]):
     def __init__(self, value: UUID | None = None) -> None:
-        self._value = value or self.value_generator()  # noqa
+        self._value = value or self.value_generator()
 
     @property
     def value_generator(self) -> Callable[[], UUID]:
@@ -16,10 +16,10 @@ class UUIDIdentity(IdentityProtocol[UUID]):
     def from_string(cls, plain_str: str) -> "UUIDIdentity":
         return cls(value=UUID(plain_str))
 
-    def __eq__(self, another_id: UUID) -> bool:
-        if not isinstance(another_id, UUID):
+    def __eq__(self, identity: "UUIDIdentity") -> bool:
+        if not isinstance(identity, UUIDIdentity):
             return False
-        return another_id == self._value
+        return identity._value == self._value
 
     def __str__(self) -> str:
         return str(self._value)

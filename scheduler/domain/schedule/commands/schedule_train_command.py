@@ -3,8 +3,8 @@ from datetime import datetime
 
 from diator.requests import Request
 
-from scheduler.domain.schedule.enums import UserRoleEnum
 from scheduler.domain.common.identity import Identity
+from scheduler.domain.schedule.enums import UserRoleEnum
 
 
 @dataclass(frozen=True, kw_only=True)
