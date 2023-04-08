@@ -8,7 +8,7 @@ from scheduler.domain.schedule.enums import UserRoleEnum
 
 @dataclass(frozen=True, kw_only=True)
 class ReportDelayCommand(Request):
-    reported_role: UserRoleEnum
-    reported_id: Identity
+    reporter_role: UserRoleEnum
+    reporter_id: Identity
     ride_id: Identity
     comment: str | None = field(default=None)
