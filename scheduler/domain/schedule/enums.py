@@ -7,3 +7,8 @@ class TrainStatusEnum(StrEnum):
     ARRIVED = "ARRIVED"
     DELAYED = "DELAYED"
     CANCELLED = "CANCELLED"
+
+
+class UserRoleEnum(StrEnum):
+    MODERATOR = "MODERATOR"
+    ADMIN = "ADMIN"
