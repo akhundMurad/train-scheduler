@@ -14,6 +14,7 @@ class Train(Entity):
     wagon_seats_quantity: int
 
 
+@dataclass(kw_only=True, eq=False)
 class Ride(Entity):
     train_id: Identity
     departure_time: datetime
@@ -23,6 +24,7 @@ class Ride(Entity):
     status: RideStatusEnum = field(default=RideStatusEnum.SCHEDULED)
 
 
+@dataclass(kw_only=True, eq=False)
 class DelayReport(Entity):
     reporter_id: Identity
     ride_id: Identity
