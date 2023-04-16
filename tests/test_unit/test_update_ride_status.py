@@ -4,18 +4,8 @@ import pytest
 
 from scheduler.domain.errors import DomainException
 from scheduler.domain.schedule.entities import Ride, Train
-from scheduler.domain.schedule.enums import RideStatusEnum, TrainTypeEnum
+from scheduler.domain.schedule.enums import RideStatusEnum
 from scheduler.domain.schedule.services import update_ride_status
-
-
-@pytest.fixture
-def cargo_train() -> Train:
-    return Train(
-        model="WWW",
-        train_type=TrainTypeEnum.CARGO,
-        wagon_seats_quantity=10,
-        wagons_quantity=10,
-    )
 
 
 @pytest.fixture
