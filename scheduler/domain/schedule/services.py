@@ -1,5 +1,5 @@
 from scheduler.domain.errors import DomainException
-from scheduler.domain.schedule.entites import Ride
+from scheduler.domain.schedule.entities import Ride
 from scheduler.domain.schedule.enums import RideStatusEnum
 
 

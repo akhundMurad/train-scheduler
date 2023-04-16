@@ -3,7 +3,7 @@ from datetime import datetime
 import pytest
 
 from scheduler.domain.errors import DomainException
-from scheduler.domain.schedule.entites import Ride, Train
+from scheduler.domain.schedule.entities import Ride, Train
 from scheduler.domain.schedule.enums import RideStatusEnum, TrainTypeEnum
 from scheduler.domain.schedule.services import update_ride_status
 
