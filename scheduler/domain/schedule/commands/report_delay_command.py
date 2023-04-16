@@ -10,5 +10,6 @@ from scheduler.domain.schedule.enums import UserRoleEnum
 class ReportDelayCommand(Request):
     reporter_role: UserRoleEnum
     reporter_id: Identity
+    report_id: Identity = field(default_factory=Identity)
     ride_id: Identity
     comment: str | None = field(default=None)

@@ -3,7 +3,7 @@ from datetime import datetime
 from scheduler.domain.common.identity import Identity
 from scheduler.domain.errors import DomainException
 from scheduler.domain.schedule.constants import MAX_RIDE_PERIOD
-from scheduler.domain.schedule.entities import Ride
+from scheduler.domain.schedule.entities import DelayReport, Ride
 from scheduler.domain.schedule.enums import RideStatusEnum
 
 
@@ -39,4 +39,16 @@ def schedule_ride(
         start_station=start_station,
         end_station=end_station,
         status=RideStatusEnum.SCHEDULED,
+    )
+
+
+def report_delay(
+    *,
+    reporter_id: Identity,
+    report_id: Identity,
+    ride_id: Identity,
+    comment: str | None = None,
+) -> DelayReport:
+    return DelayReport(
+        identity=report_id, reporter_id=reporter_id, ride_id=ride_id, comment=comment
     )
