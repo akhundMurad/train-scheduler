@@ -1,2 +1,6 @@
 class DomainException(Exception):
     ...
+
+
+class ConcurrencyException(DomainException):
+    ...
