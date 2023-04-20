@@ -4,7 +4,8 @@ import pytest
 
 from scheduler.domain.common.identity import Identity
 from scheduler.domain.errors import DomainException
-from scheduler.domain.schedule.entities import Ride, Train
+from scheduler.domain.schedule.ride import Ride
+from scheduler.domain.schedule.train import Train
 from scheduler.domain.schedule.enums import RideStatusEnum
 from scheduler.domain.schedule.services import schedule_ride
 

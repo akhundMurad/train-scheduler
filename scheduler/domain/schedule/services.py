@@ -3,7 +3,8 @@ from datetime import datetime
 from scheduler.domain.common.identity import Identity
 from scheduler.domain.errors import DomainException
 from scheduler.domain.schedule.constants import MAX_RIDE_PERIOD
-from scheduler.domain.schedule.entities import DelayReport, Ride
+from scheduler.domain.schedule.ride import Ride
+from scheduler.domain.schedule.delay_report import DelayReport
 from scheduler.domain.schedule.enums import RideStatusEnum
 
 

@@ -1,5 +1,6 @@
 from scheduler.domain.common.identity import Identity
-from scheduler.domain.schedule.entities import DelayReport, Ride
+from scheduler.domain.schedule.ride import Ride
+from scheduler.domain.schedule.delay_report import DelayReport
 from scheduler.domain.schedule.services import report_delay
 
 
