@@ -13,4 +13,4 @@ def test_concurrency_safe_entity() -> None:
     try:
         entity.set_concurrency_version(0)
     except ConcurrencyException as exc:
-        pytest.fail(exc)
+        pytest.fail(str(exc))
