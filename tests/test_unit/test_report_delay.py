@@ -5,20 +5,20 @@ from scheduler.domain.schedule.enums import UserRoleEnum
 from scheduler.domain.schedule.ride import Ride
 
 
-def test_report_delay(arrived_ride: Ride) -> None:
+def test_report_delay(scheduled_ride: Ride) -> None:
     command = ReportDelayCommand(
         reporter_role=UserRoleEnum.MODERATOR,
         reporter_id=Identity(),
         report_id=Identity(),
-        ride_id=arrived_ride.identity,
+        ride_id=scheduled_ride.identity,
         comment="comment",
         delay_minutes=15,
     )
 
-    arrived_ride.handle(command)
+    scheduled_ride.handle(command)
 
-    assert len(arrived_ride.reports)
-    delay_report = arrived_ride.reports.pop()
+    assert len(scheduled_ride.reports)
+    delay_report = scheduled_ride.reports.pop()
 
     assert isinstance(delay_report, DelayReport)
     assert delay_report.comment == command.comment

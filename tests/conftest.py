@@ -28,3 +28,15 @@ def arrived_ride(cargo_train: Train) -> Ride:
         end_station="B",
         status=RideStatusEnum.ARRIVED,
     )
+
+
+@pytest.fixture
+def scheduled_ride(cargo_train: Train) -> Ride:
+    return Ride(
+        train_id=cargo_train.identity,
+        departure_time=datetime(2022, 8, 7),
+        arriving_time=datetime(2022, 8, 8),
+        start_station="A",
+        end_station="B",
+        status=RideStatusEnum.SCHEDULED,
+    )

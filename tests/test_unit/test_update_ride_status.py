@@ -7,7 +7,7 @@ from scheduler.domain.schedule.enums import RideStatusEnum, UserRoleEnum
 from scheduler.domain.schedule.ride import Ride
 
 
-def test_update_ride_status_to_scheduled(arrived_ride: Ride) -> None:
+def test_update_ride_status_to_scheduled(scheduled_ride: Ride) -> None:
     command = UpdateRideStatusCommand(
         current_user_role=UserRoleEnum.MODERATOR,
         train_id=Identity(),
@@ -15,9 +15,9 @@ def test_update_ride_status_to_scheduled(arrived_ride: Ride) -> None:
         new_status=RideStatusEnum.SCHEDULED,
     )
 
-    arrived_ride.handle(command)
+    scheduled_ride.handle(command)
 
-    assert arrived_ride.status == RideStatusEnum.SCHEDULED
+    assert scheduled_ride.status == RideStatusEnum.SCHEDULED
 
 
 def test_update_ride_status_to_departed(arrived_ride: Ride) -> None:
