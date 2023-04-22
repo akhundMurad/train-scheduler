@@ -2,10 +2,10 @@ from datetime import datetime
 
 import pytest
 
+from scheduler.domain.schedule.enums import RideStatusEnum, TrainTypeEnum
 from scheduler.domain.schedule.ride import Ride
 from scheduler.domain.schedule.train import Train
 from scheduler.domain.schedule.train_model import TrainModel
-from scheduler.domain.schedule.enums import RideStatusEnum, TrainTypeEnum
 
 
 @pytest.fixture

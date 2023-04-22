@@ -17,3 +17,8 @@ class TrainTypeEnum(StrEnum):
 class UserRoleEnum(StrEnum):
     MODERATOR = "MODERATOR"
     ADMIN = "ADMIN"
+
+
+class DelayReportStatusEnum(StrEnum):
+    REPORTED = "REPORTED"
+    APPROVED = "APPROVED"

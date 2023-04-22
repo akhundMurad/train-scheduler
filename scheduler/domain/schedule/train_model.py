@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+
 from scheduler.domain.common.identified_value_object import IdentifiedValueObject
 
 

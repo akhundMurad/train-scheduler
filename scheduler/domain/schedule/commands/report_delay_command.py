@@ -12,4 +12,5 @@ class ReportDelayCommand(Request):
     reporter_id: Identity
     report_id: Identity = field(default_factory=Identity)
     ride_id: Identity
+    delay_minutes: int
     comment: str | None = field(default=None)

@@ -9,5 +9,4 @@ from scheduler.domain.schedule.enums import UserRoleEnum
 @dataclass(frozen=True, kw_only=True)
 class DispatchTrainCommand(Request):
     current_user_role: UserRoleEnum
-    train_id: Identity
     ride_id: Identity
