@@ -1,7 +1,7 @@
 from typing import Any, Iterable
 
 from scheduler.domain.errors import AssertionConcernException
-from scheduler.types import SupportsGe, SupportsNe
+from scheduler.types import SupportsGe
 
 
 class AssertionConcern:
