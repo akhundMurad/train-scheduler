@@ -7,7 +7,7 @@ from diator.requests import Request
 
 from scheduler.domain.common.event_sourced_root_entity import EventSourcedRootEntity
 from scheduler.domain.common.identity import Identity
-from scheduler.domain.schedule import commands
+from scheduler.domain.schedule import commands, events
 from scheduler.domain.schedule.constants import MAX_RIDE_PERIOD
 from scheduler.domain.schedule.delay_report import DelayReport
 from scheduler.domain.schedule.enums import DelayReportStatusEnum, RideStatusEnum
@@ -58,6 +58,15 @@ class Ride(EventSourcedRootEntity):
         )
         self.reports.append(delay_report)
 
+        self.apply(
+            events.DelayReportedEvent(
+                reporter_id=command.reporter_id,
+                report_id=command.report_id,
+                ride_id=command.ride_id,
+                delay_minutes=command.delay_minutes,
+            )
+        )
+
     @handle.register
     def _(self, command: commands.ApproveDelayCommand) -> None:
         selected_report = next(
@@ -82,6 +91,24 @@ class Ride(EventSourcedRootEntity):
         self.status = RideStatusEnum.DEPARTED
         self.departure_time = datetime.utcnow()
 
+        self.apply(
+            events.TrainDepartedEvent(
+                train_id=self.train_id,
+                ride_id=self.identity,
+                departure_time=self.departure_time,
+            )
+        )
+
     @singledispatchmethod
-    def when(self, event: DomainEvent) -> None:
+    def mutate_when(self, event: DomainEvent) -> None:
         ...
+
+    def set_event_stream(
+        self, event_stream: list[DomainEvent], stream_version: int
+    ) -> None:
+        self._mutating_events = event_stream
+
+        for event in self._mutating_events:
+            self.apply(event)
+
+        self._unmutated_version = stream_version
