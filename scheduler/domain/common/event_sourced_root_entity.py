@@ -31,3 +31,13 @@ class EventSourcedRootEntity(ConcurrencySafeEntity):
     @property
     def mutated_version(self) -> int:
         return self._unmutated_version + 1
+
+    def set_event_stream(
+        self, event_stream: list[DomainEvent], stream_version: int
+    ) -> None:
+        self._mutating_events = event_stream
+
+        for event in self._mutating_events:
+            self.apply(event)
+
+        self._unmutated_version = stream_version

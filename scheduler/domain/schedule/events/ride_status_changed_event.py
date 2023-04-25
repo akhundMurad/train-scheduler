@@ -3,12 +3,11 @@ from dataclasses import dataclass
 from diator.events import DomainEvent
 
 from scheduler.domain.common.identity import Identity
+from scheduler.domain.schedule.enums import RideStatusEnum
 
 
 @dataclass(frozen=True, kw_only=True)
-class TrainBookedEvent(DomainEvent):
-    person_id: Identity
-    train_id: Identity
+class RideStatusChangedEvent(DomainEvent):
     ride_id: Identity
-    wagon_number: int
-    seat_number: int
+    previous_status: RideStatusEnum
+    new_status: RideStatusEnum

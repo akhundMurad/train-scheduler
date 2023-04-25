@@ -12,11 +12,11 @@ This section provides an overview of the main business rules and processes that 
 
 #### Events
 
-- Train booked: This event could be triggered when a customer books a train ticket, which would then initiate the train scheduling process.
+- Ride scheduled: This event could be triggered when a ride is scheduled.
 
-- Train departed: This event could be triggered when a train departs from a station, which would then update the train's status and trigger subsequent events.
+- Ride status changed: This event could be triggered when a ride status is changed.
 
-- Train arrived: This event could be triggered when a train arrives at a station, which would then update the train's status and trigger subsequent events.
+- Delay approved: This event could be triggered when a delay is approved.
 
 - Delay reported: This event could be triggered when a delay is reported for a train, which would then initiate the process of managing the delay and updating the train schedule.
 

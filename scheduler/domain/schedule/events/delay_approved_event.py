@@ -6,6 +6,7 @@ from scheduler.domain.common.identity import Identity
 
 
 @dataclass(frozen=True, kw_only=True)
-class TrainArrivedEvent(DomainEvent):
-    train_id: Identity
+class DelayApprovedEvent(DomainEvent):
+    report_id: Identity
     ride_id: Identity
+    delay_minutes: int

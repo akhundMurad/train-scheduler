@@ -31,6 +31,10 @@ class Ride(EventSourcedRootEntity):
             f"Ride period cannot be equal or greater than {MAX_RIDE_PERIOD}",
         )
 
+        self.apply(
+            events.RideScheduledEvent(ride_id=self.identity, train_id=self.train_id)
+        )
+
     @singledispatchmethod
     def handle(self, command: Request) -> None:
         ...
@@ -45,7 +49,16 @@ class Ride(EventSourcedRootEntity):
             exc_message="Ride status cannot be changed to 'departed' after it was equal to 'arrived'.",
         )
 
+        previous_status = self.status
         self.status = command.new_status
+
+        self.apply(
+            events.RideStatusChangedEvent(
+                ride_id=self.identity,
+                previous_status=previous_status,
+                new_status=self.status,
+            )
+        )
 
     @handle.register
     def _(self, command: commands.ReportDelayCommand) -> None:
@@ -79,6 +92,14 @@ class Ride(EventSourcedRootEntity):
         self.arriving_time += selected_report.delay_delta
         self.status = RideStatusEnum.DELAYED
 
+        self.apply(
+            events.DelayApprovedEvent(
+                report_id=command.delay_id,
+                ride_id=self.identity,
+                delay_minutes=selected_report.delay_delta.seconds * 60,
+            )
+        )
+
     @handle.register
     def _(self, command: commands.DispatchTrainCommand) -> None:
         self.assert_values_equal_or(
@@ -102,13 +123,3 @@ class Ride(EventSourcedRootEntity):
     @singledispatchmethod
     def mutate_when(self, event: DomainEvent) -> None:
         ...
-
-    def set_event_stream(
-        self, event_stream: list[DomainEvent], stream_version: int
-    ) -> None:
-        self._mutating_events = event_stream
-
-        for event in self._mutating_events:
-            self.apply(event)
-
-        self._unmutated_version = stream_version
