@@ -9,5 +9,4 @@ from scheduler.domain.schedule.enums import RideStatusEnum
 @dataclass(frozen=True, kw_only=True)
 class RideStatusChangedEvent(DomainEvent):
     ride_id: Identity
-    previous_status: RideStatusEnum
     new_status: RideStatusEnum

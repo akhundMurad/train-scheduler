@@ -8,7 +8,7 @@ from diator.requests import Request
 from scheduler.domain.common.event_sourced_root_entity import EventSourcedRootEntity
 from scheduler.domain.common.identity import Identity
 from scheduler.domain.schedule import commands, events
-from scheduler.domain.schedule.constants import MAX_RIDE_PERIOD
+from scheduler.domain.schedule.constants import MAX_DELAY_MINUTES, MAX_RIDE_PERIOD
 from scheduler.domain.schedule.delay_report import DelayReport
 from scheduler.domain.schedule.enums import DelayReportStatusEnum, RideStatusEnum
 
@@ -49,34 +49,28 @@ class Ride(EventSourcedRootEntity):
             exc_message="Ride status cannot be changed to 'departed' after it was equal to 'arrived'.",
         )
 
-        previous_status = self.status
-        self.status = command.new_status
-
         self.apply(
             events.RideStatusChangedEvent(
                 ride_id=self.identity,
-                previous_status=previous_status,
                 new_status=self.status,
             )
         )
 
     @handle.register
     def _(self, command: commands.ReportDelayCommand) -> None:
-        delay_report = DelayReport(
-            identity=command.report_id,
-            reporter_id=command.reporter_id,
-            ride_id=command.ride_id,
-            comment=command.comment,
-            delay_delta=timedelta(minutes=command.delay_minutes),
+        self.assert_value_lt(
+            command.delay_minutes,
+            MAX_DELAY_MINUTES,
+            f"Ride cannot be delayed over than {MAX_RIDE_PERIOD} minutes.",
         )
-        self.reports.append(delay_report)
 
         self.apply(
             events.DelayReportedEvent(
-                reporter_id=command.reporter_id,
                 report_id=command.report_id,
+                reporter_id=command.reporter_id,
                 ride_id=command.ride_id,
-                delay_minutes=command.delay_minutes,
+                comment=command.comment,
+                delay_delta=timedelta(minutes=command.delay_minutes),
             )
         )
 
@@ -88,15 +82,12 @@ class Ride(EventSourcedRootEntity):
         )
         self.assert_is_not_none(selected_report, "Selected report delay is not exist.")
 
-        selected_report.status = DelayReportStatusEnum.APPROVED
-        self.arriving_time += selected_report.delay_delta
-        self.status = RideStatusEnum.DELAYED
-
         self.apply(
             events.DelayApprovedEvent(
                 report_id=command.delay_id,
                 ride_id=self.identity,
                 delay_minutes=selected_report.delay_delta.seconds * 60,
+                selected_report=selected_report,
             )
         )
 
@@ -109,8 +100,6 @@ class Ride(EventSourcedRootEntity):
             RideStatusEnum.DELAYED,
             exc_message="Only scheduled or delayed ride can become departed",
         )
-        self.status = RideStatusEnum.DEPARTED
-        self.departure_time = datetime.utcnow()
 
         self.apply(
             events.TrainDepartedEvent(
@@ -121,5 +110,31 @@ class Ride(EventSourcedRootEntity):
         )
 
     @singledispatchmethod
-    def mutate_when(self, event: DomainEvent) -> None:
+    def when(self, event: DomainEvent) -> None:
         ...
+
+    @when.register
+    def _(self, event: events.RideStatusChangedEvent) -> None:
+        self.status = event.new_status
+
+    @when.register
+    def _(self, event: events.DelayApprovedEvent) -> None:
+        event.selected_report.status = DelayReportStatusEnum.APPROVED
+        self.arriving_time += event.selected_report.delay_delta
+        self.status = RideStatusEnum.DELAYED
+
+    @when.register
+    def _(self, event: events.DelayReportedEvent) -> None:
+        delay_report = DelayReport(
+            identity=event.report_id,
+            reporter_id=event.reporter_id,
+            ride_id=event.ride_id,
+            comment=event.comment,
+            delay_delta=event.delay_delta,
+        )
+        self.reports.append(delay_report)
+
+    @when.register
+    def _(self, event: events.TrainDepartedEvent) -> None:
+        self.status = RideStatusEnum.DEPARTED
+        self.departure_time = datetime.utcnow()

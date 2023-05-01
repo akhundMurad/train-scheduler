@@ -17,12 +17,12 @@ class EventSourcedRootEntity(ConcurrencySafeEntity):
         ...
 
     @singledispatchmethod
-    def mutate_when(self, event: DomainEvent) -> None:
+    def when(self, event: DomainEvent) -> None:
         ...
 
     def apply(self, event: DomainEvent) -> None:
         self._mutating_events.append(event)
-        self.mutate_when(event)
+        self.when(event)
 
     @property
     def mutating_events(self) -> list[DomainEvent]:
